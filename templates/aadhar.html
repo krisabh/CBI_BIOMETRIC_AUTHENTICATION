@@ -1,0 +1,145 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>Aadhaar Registration</h2>
+
+{% if error %}
+<div class="alert alert-danger">
+  {{ error }}
+</div>
+{% endif %}
+
+<form id="aadharForm" action="/aadhar/register" method="post" enctype="multipart/form-data">
+  <div class="mb-3">
+    <label for="name" class="form-label">Name</label>
+    <input type="text" class="form-control" id="name" name="name" required>
+  </div>
+
+  <div class="mb-3">
+    <label for="address" class="form-label">Address</label>
+    <input type="text" class="form-control" id="address" name="address" required>
+  </div>
+
+  <div class="mb-3">
+    <label for="mobile_number" class="form-label">Mobile Number</label>
+    <input type="text" class="form-control" id="mobile_number" name="mobile_number" required>
+  </div>
+
+  <div class="mb-3">
+    <label class="form-label">Thumb Image</label>
+    <input type="file" class="form-control" id="thumb_image" name="thumb_image" required>
+  </div>
+
+  <!-- Photo Section -->
+  <div class="mb-3">
+    <label class="form-label">Photo</label>
+    <div>
+      <button type="button" class="btn btn-secondary me-2" onclick="showUpload()">Upload Image</button>
+      <button type="button" class="btn btn-secondary" onclick="openCameraModal()">Use Camera</button>
+    </div>
+  </div>
+
+  <!-- File Upload Option -->
+  <div class="mb-3" id="uploadPhotoDiv" style="display:none;">
+    <input type="file" class="form-control" id="photo" name="photo">
+  </div>
+
+  <!-- Hidden field to hold captured image from camera modal -->
+  <input type="hidden" id="photo_data" name="photo_data">
+
+  <button type="submit" class="btn btn-primary">Register Aadhaar</button>
+</form>
+
+<!-- Camera Modal -->
+<div id="cameraModal" class="modal">
+  <div class="modal-content">
+    <span class="close" onclick="closeCameraModal()">&times;</span>
+    <video id="video" width="320" height="240" autoplay style="border:1px solid #ccc;"></video>
+    <br>
+    <button type="button" class="btn btn-primary mt-2" onclick="capturePhoto()">Capture Photo</button>
+  </div>
+</div>
+
+<style>
+  /* Modal overlay style */
+  .modal {
+    display: none; /* Hidden by default */
+    position: fixed;
+    z-index: 1000; /* Ensure it's on top */
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0,0,0,0.7); /* Black with opacity */
+  }
+
+  /* Modal content box */
+  .modal-content {
+    background-color: #fefefe;
+    margin: 10% auto; /* 10% from the top, centered */
+    padding: 20px;
+    border: 1px solid #888;
+    width: 360px; /* Could be more or less, depending on screen size */
+    text-align: center;
+  }
+
+  /* Close button */
+  .close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+  }
+  .close:hover,
+  .close:focus {
+    color: black;
+  }
+</style>
+
+<script>
+  function showUpload() {
+    document.getElementById("uploadPhotoDiv").style.display = "block";
+    closeCameraModal(); // Ensure modal is closed if open
+  }
+
+  function openCameraModal() {
+    // Hide file upload field if visible
+    document.getElementById("uploadPhotoDiv").style.display = "none";
+    // Display the modal
+    document.getElementById("cameraModal").style.display = "block";
+    // Start the camera stream
+    navigator.mediaDevices.getUserMedia({ video: true })
+      .then(stream => {
+        window.stream = stream;
+        document.getElementById("video").srcObject = stream;
+      })
+      .catch(err => {
+        console.error("Error accessing camera: ", err);
+        alert("Error accessing camera: " + err);
+      });
+  }
+
+  function closeCameraModal() {
+    document.getElementById("cameraModal").style.display = "none";
+    // Stop the camera stream if it's active
+    if (window.stream) {
+      window.stream.getTracks().forEach(track => track.stop());
+    }
+  }
+
+  function capturePhoto() {
+    const video = document.getElementById("video");
+    const canvas = document.createElement("canvas");
+    canvas.width = video.videoWidth || 320;
+    canvas.height = video.videoHeight || 240;
+    const context = canvas.getContext("2d");
+    context.drawImage(video, 0, 0, canvas.width, canvas.height);
+    const dataURL = canvas.toDataURL("image/jpeg");
+    document.getElementById("photo_data").value = dataURL;
+    closeCameraModal(); // Hide the modal after capturing
+    alert("Photo captured successfully.");
+  }
+</script>
+{% endblock %}

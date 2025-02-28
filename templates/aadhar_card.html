@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="card mx-auto mt-4" style="width: 350px; border: 1px solid #ccc; box-shadow: 2px 2px 6px #aaa;">
+  <div class="card-body text-center">
+    <h4 class="card-title">Aadhaar Card</h4>
+    <img src="{{ card.photo }}" alt="User Photo" class="img-fluid rounded mb-3" style="max-height: 150px;">
+    <h5 class="card-text"><strong>Name:</strong> {{ card.name }}</h5>
+    <p class="card-text"><strong>Address:</strong> {{ card.address }}</p>
+    <p class="card-text"><strong>Aadhaar Number:</strong> {{ card.aadhar_number }}</p>
+  </div>
+</div>
+<a href="/aadhar" class="btn btn-primary mt-3">Register Another User</a>
+{% endblock %}

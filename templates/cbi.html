@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2 class="text-center">CBI Dashboard - Thumb Verification</h2>
+
+{% if error %}
+<div class="alert alert-danger text-center">{{ error }}</div>
+{% endif %}
+
+<form action="/cbi/match" method="post" enctype="multipart/form-data" class="text-center">
+    <label for="thumb_image" class="form-label">Upload Thumb Image</label>
+    <input type="file" class="form-control mb-3" id="thumb_image" name="file" required>
+    <button type="submit" class="btn btn-primary">Submit</button>
+</form>
+{% endblock %}

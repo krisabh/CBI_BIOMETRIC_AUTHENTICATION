@@ -1,0 +1,88 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2 class="text-center">Judicial Dashboard</h2>
+
+{% if error %}
+<div class="alert alert-danger text-center">
+  {{ error }}
+</div>
+{% endif %}
+
+<!-- Centered Buttons -->
+<div class="d-flex justify-content-center mt-4">
+    <button class="btn btn-primary mx-2" onclick="showForm('firForm')">File FIR</button>
+    <button class="btn btn-primary mx-2" onclick="showForm('courtForm')">Court Hearing</button>
+</div>
+
+<!-- FIR Form (Initially Hidden) -->
+<div id="firForm" style="display: none; margin-top: 20px;">
+    <h3>File FIR</h3>
+    <form action="/crime/file_fir" method="post">
+        <div class="mb-3">
+            <label for="name" class="form-label">Complainant Name</label>
+            <input type="text" class="form-control" id="name" name="name" required>
+        </div>
+        <div class="mb-3">
+            <label for="aadhar_number" class="form-label">Complainant Aadhaar</label>
+            <input type="text" class="form-control" id="aadhar_number" name="aadhar_number" required>
+        </div>
+        <div class="mb-3">
+            <label for="accused_name" class="form-label">Accused Name</label>
+            <input type="text" class="form-control" id="accused_name" name="accused_name" required>
+        </div>
+        <div class="mb-3">
+            <label for="accused_aadhar" class="form-label">Accused Aadhaar</label>
+            <input type="text" class="form-control" id="accused_aadhar" name="accused_aadhar" required>
+        </div>
+        <div class="mb-3">
+            <label for="description" class="form-label">Description</label>
+            <textarea class="form-control" id="description" name="description" required></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary">Submit FIR</button>
+    </form>
+</div>
+
+<!-- Court Hearing Form (Initially Hidden) -->
+<div id="courtForm" style="display: none; margin-top: 20px;">
+    <h3>Court Hearing</h3>
+    <form action="/crime/court_hearing" method="post">
+        <div class="mb-3">
+            <label for="name" class="form-label">Petitioner Name</label>
+            <input type="text" class="form-control" id="name" name="name" required>
+        </div>
+        <div class="mb-3">
+            <label for="aadhar_number" class="form-label">Petitioner Aadhaar</label>
+            <input type="text" class="form-control" id="aadhar_number" name="aadhar_number" required>
+        </div>
+        <div class="mb-3">
+            <label for="court_name" class="form-label">Court Name</label>
+            <input type="text" class="form-control" id="court_name" name="court_name" required>
+        </div>
+        <div class="mb-3">
+            <label for="judge_name" class="form-label">Judge Name</label>
+            <input type="text" class="form-control" id="judge_name" name="judge_name" required>
+        </div>
+        <div class="mb-3">
+            <label for="case_details" class="form-label">Case Details</label>
+            <textarea class="form-control" id="case_details" name="case_details" required></textarea>
+        </div>
+        <div class="mb-3">
+            <label for="hearing_date" class="form-label">Hearing Date</label>
+            <input type="date" class="form-control" id="hearing_date" name="hearing_date" required>
+        </div>
+        <button type="submit" class="btn btn-primary">Submit Court Hearing</button>
+    </form>
+</div>
+
+<!-- JavaScript to toggle forms -->
+<script>
+    function showForm(formId) {
+        document.getElementById("firForm").style.display = "none";
+        document.getElementById("courtForm").style.display = "none";
+
+        document.getElementById(formId).style.display = "block";
+    }
+</script>
+
+{% endblock %}

@@ -1,0 +1,90 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>Travel Booking</h2>
+
+{% if error %}
+<div class="alert alert-danger">{{ error }}</div>
+{% endif %}
+
+<form action="/travel/book" method="post" id="travelForm">
+  <div class="mb-3">
+    <label for="aadhar_number" class="form-label">Aadhaar Number</label>
+    <input type="text" class="form-control" id="aadhar_number" name="aadhar_number" required>
+  </div>
+  <div class="mb-3">
+    <label for="name" class="form-label">Passenger Name</label>
+    <input type="text" class="form-control" id="name" name="name" required>
+  </div>
+  <div class="mb-3">
+    <label for="mode" class="form-label">Mode of Transport</label>
+    <select class="form-select" id="mode" name="mode" required onchange="modeChanged()">
+      <option value="">Select Mode</option>
+      <option value="flight">Flight</option>
+      <option value="train">Train</option>
+      <option value="bus">Bus</option>
+    </select>
+  </div>
+  <!-- Transport Name field: hidden by default -->
+  <div class="mb-3" id="transportNameDiv" style="display:none;">
+    <label id="transportNameLabel" for="transport_name" class="form-label"></label>
+    <select class="form-select" id="transport_name" name="transport_name" required>
+      <option value="" disabled selected>Select--</option>
+      <!-- Options will be populated via JavaScript -->
+    </select>
+  </div>
+  <div class="mb-3">
+    <label for="source" class="form-label">Source City</label>
+    <input type="text" class="form-control" id="source" name="source" required>
+  </div>
+  <div class="mb-3">
+    <label for="destination" class="form-label">Destination City</label>
+    <input type="text" class="form-control" id="destination" name="destination" required>
+  </div>
+  <div class="mb-3">
+    <label for="date_of_journey" class="form-label">Date of Journey (YYYY-MM-DD)</label>
+    <input type="text" class="form-control" id="date_of_journey" name="date_of_journey" required>
+  </div>
+  <button type="submit" class="btn btn-primary">Book Travel</button>
+</form>
+
+<script>
+  // Define transport options for each mode
+  const transportOptions = {
+    flight: ["INDIGO", "SPICEJET", "AIR INDIA", "AIR ASIA"],
+    train: ["VANDE BHARAT", "JAN SHATABDI", "GAREEN RATH", "DODRONTO EXPRESS"],
+    bus: ["VRL Travels", "SRS Travels", "Odbus", "RedBus"]
+  };
+
+  function modeChanged() {
+    const modeSelect = document.getElementById("mode");
+    const selectedMode = modeSelect.value;
+    const transportNameDiv = document.getElementById("transportNameDiv");
+    const transportNameLabel = document.getElementById("transportNameLabel");
+    const transportNameSelect = document.getElementById("transport_name");
+
+    // Clear previous options
+    transportNameSelect.innerHTML = '<option value="" disabled selected>Select--</option>';
+
+    if (selectedMode && transportOptions[selectedMode]) {
+      // Set the label text based on the mode (e.g., "Flight Name")
+      transportNameLabel.textContent = selectedMode.charAt(0).toUpperCase() + selectedMode.slice(1) + " Name";
+
+      // Populate the dropdown with options specific to the selected mode
+      transportOptions[selectedMode].forEach(option => {
+        const opt = document.createElement("option");
+        opt.value = option;
+        opt.textContent = option;
+        transportNameSelect.appendChild(opt);
+      });
+
+      // Show the transport name field
+      transportNameDiv.style.display = "block";
+    } else {
+      // Hide the transport name field if no valid mode is selected
+      transportNameDiv.style.display = "none";
+    }
+  }
+</script>
+
+{% endblock %}
